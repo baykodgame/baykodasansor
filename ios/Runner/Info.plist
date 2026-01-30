@@ -44,30 +44,34 @@
 	<key>NSCameraUsageDescription</key>
 	<string>Asansör arızalarına ve bakımlara ait fotoğrafları çekebilmek için kamera erişimi gereklidir.</string>
 
-	<!-- 🖼 GALERİ / DOSYA -->
+	<!-- 🖼 GALERİ -->
 	<key>NSPhotoLibraryUsageDescription</key>
 	<string>Asansör arıza ve bakım kayıtlarına fotoğraf ekleyebilmek için galeri erişimi gereklidir.</string>
 
-	<!-- 📍 KONUM (SADECE HARİTA İÇİN) -->
+	<!-- 📍 KONUM -->
 	<key>NSLocationWhenInUseUsageDescription</key>
 	<string>Bina adreslerini harita üzerinde gösterebilmek için konum erişimi gereklidir.</string>
 
-	<!-- 🔒 ATS (HTTPS KULLANILIYOR – DEĞİŞTİRME) -->
+	<!-- 🔒 ATS -->
 	<key>NSAppTransportSecurity</key>
 	<dict>
 		<key>NSAllowsArbitraryLoads</key>
 		<false/>
 	</dict>
 
-	<!-- 📱 SADECE DİKEY EKRAN -->
+	<!-- 📱 iPhone: SADECE DİKEY -->
 	<key>UISupportedInterfaceOrientations</key>
 	<array>
 		<string>UIInterfaceOrientationPortrait</string>
 	</array>
 
+	<!-- 📱 iPad: APP STORE ZORUNLU -->
 	<key>UISupportedInterfaceOrientations~ipad</key>
 	<array>
 		<string>UIInterfaceOrientationPortrait</string>
+		<string>UIInterfaceOrientationPortraitUpsideDown</string>
+		<string>UIInterfaceOrientationLandscapeLeft</string>
+		<string>UIInterfaceOrientationLandscapeRight</string>
 	</array>
 
 	<key>UILaunchStoryboardName</key>

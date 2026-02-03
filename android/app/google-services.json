@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "871011863772",
+    "project_id": "baykod-asansor-takip-afb3b",
+    "storage_bucket": "baykod-asansor-takip-afb3b.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:871011863772:android:f5b8d87ec7d299dc5cf819",
+        "android_client_info": {
+          "package_name": "com.baykod.asansor.takip"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAV6TJgi4trUf80VKUap44j4LWj2wJwupE"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

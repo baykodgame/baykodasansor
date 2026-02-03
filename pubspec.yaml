@@ -4,7 +4,7 @@ publish_to: 'none'
 
 # ⚠️ iOS KURALI:
 # App Store / TestFlight her upload'ta build number (+) artmak ZORUNLU
-version: 1.0.0+2
+version: 1.0.0+3
 
 environment:
   sdk: ">=3.0.0 <4.0.0"

@@ -16,11 +16,25 @@ dependencies:
   # 🍎 iOS UI ikonları
   cupertino_icons: ^1.0.8
 
-  # 🌐 API (Retrofit muadili)
+  # 🌐 HTTP API (Retrofit muadili)
   http: ^1.2.1
 
   # 🔐 Güvenli token & role saklama
   flutter_secure_storage: ^9.2.2
+
+  # 🔥 FIREBASE CORE (ZORUNLU)
+  firebase_core: ^2.30.0
+
+  # 🔔 FIREBASE CLOUD MESSAGING
+  firebase_messaging: ^14.9.4
+
+  intl: ^0.19.0
+
+  flutter_local_notifications: ^17.0.0
+
+  # 📦 (OPSİYONEL – ŞİMDİ KULLANMIYORUZ)
+  # İleride kullanıcı davranışı, hata analizi için açılabilir
+  # firebase_analytics: ^10.10.0
 
 dev_dependencies:
   flutter_test:

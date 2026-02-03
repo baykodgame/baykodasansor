@@ -4,6 +4,7 @@ import '../widgets/dashboard_card.dart';
 import '../widgets/drawer_menu.dart';
 import '../core/security/user_role.dart';
 import '../core/security/secure_storage.dart';
+import '../core/api/dashboard_service.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -14,106 +15,158 @@ class HomeScreen extends StatefulWidget {
 
 class _HomeScreenState extends State<HomeScreen> {
   UserRole? role;
+  bool loading = true;
+  Map<String, dynamic>? dashboard;
 
   @override
   void initState() {
     super.initState();
-    _loadRole();
+    _init();
   }
 
-  Future<void> _loadRole() async {
-    final r = await SecureStorage.getRole();
-    if (!mounted) return;
-    setState(() => role = r);
+  Future<void> _init() async {
+  final r = await SecureStorage.getRole();
+
+  // 🔥 UI DONMASINI KESER
+  final data = await Future.microtask(
+    () => DashboardService.getDashboard(),
+  );
+
+  if (!mounted) return;
+
+  setState(() {
+    role = r;
+    dashboard = data;
+    loading = false;
+  });
+}
+
+  // 📍 BÖLGE SAYIMI
+  Map<String, int> bolgeSayim(List<dynamic> binalar) {
+    final Map<String, int> map = {};
+    for (final b in binalar) {
+      final bolge = (b["bina_bolgesi"] ?? "Bilinmeyen").toString();
+      map[bolge] = (map[bolge] ?? 0) + 1;
+    }
+    return map;
   }
 
   @override
   Widget build(BuildContext context) {
-    // ⏳ Role gelene kadar bekle
-    if (role == null) {
+    if (loading || role == null || dashboard == null) {
       return const Scaffold(
         body: Center(child: CircularProgressIndicator()),
       );
     }
 
+    final List binalar = dashboard!["binalar"]["data"] ?? [];
+    final List arizalar = dashboard!["arizalar"]["data"] ?? [];
+    final Map bakimlar = dashboard!["bakimlar"]["data"] ?? {};
+    final Map periyodik = dashboard!["periyodik"]["data"] ?? {};
+    final bolgeler = bolgeSayim(binalar);
+
     return Scaffold(
-      drawer: DrawerMenu(role: role!), // 🔥 GERÇEK ROLE
+      backgroundColor: const Color(0xFFF5F7FB),
+      drawer: DrawerMenu(role: role!),
       appBar: AppBar(
-        title: const Text("Baykod Asansör Takip Sistemi"),
+        elevation: 0,
+        backgroundColor: Colors.white,
+        foregroundColor: Colors.black,
+        title: const Text(
+          "Baykod Asansör Takip Sistemi",
+          style: TextStyle(
+            fontSize: 18,
+            fontWeight: FontWeight.w600,
+          ),
+        ),
       ),
       body: SingleChildScrollView(
-        padding: const EdgeInsets.all(16),
+        physics: const BouncingScrollPhysics(),
+        padding: const EdgeInsets.fromLTRB(16, 12, 16, 28),
         child: Column(
-          children: const [
-            InfoCard(),
-            SizedBox(height: 16),
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: [
+            const InfoCard(),
+            const SizedBox(height: 20),
 
-            /// GRID
+            /// 🏢 BİNALAR / 🚨 ARIZALAR
             Row(
               children: [
                 Expanded(
                   child: DashboardCard(
                     title: "Binalar",
                     icon: Icons.apartment,
+                    isPrimary: true,
                     lines: [
-                      "Toplam: 8",
-                      "1: 2",
-                      "333: 1",
+                      "Toplam: ${binalar.length}",
+                      ...bolgeler.entries
+                          .map((e) => "${e.key}: ${e.value}"),
                     ],
+                    onTap: () {
+                      Navigator.pushNamed(
+                        context,
+                        "/binalar",
+                        arguments: binalar,
+                      );
+                    },
                   ),
                 ),
-                SizedBox(width: 12),
+                const SizedBox(width: 12),
                 Expanded(
                   child: DashboardCard(
                     title: "Arızalar",
                     icon: Icons.build,
+                    isPrimary: true,
                     lines: [
-                      "Toplam: 0",
-                      "Yapılmadı: 0",
-                      "Yapıldı: 0",
+                      "Toplam: ${arizalar.length}",
                     ],
                   ),
                 ),
               ],
             ),
 
-            SizedBox(height: 12),
+            const SizedBox(height: 14),
 
+            /// 🔧 BAKIM / 📅 PERİYODİK
             Row(
               children: [
                 Expanded(
                   child: DashboardCard(
                     title: "Bakımlar",
                     icon: Icons.handyman,
+                    isPrimary: true,
                     lines: [
-                      "Toplam: 0",
-                      "Yapılacak: 1",
+                      "Toplam: ${bakimlar["toplam"] ?? 0}",
+                      "Yapılacak: ${bakimlar["yapilacak"] ?? 0}",
                     ],
                   ),
                 ),
-                SizedBox(width: 12),
+                const SizedBox(width: 12),
                 Expanded(
                   child: DashboardCard(
                     title: "Periyodik",
                     icon: Icons.calendar_month,
+                    isPrimary: true,
                     lines: [
-                      "Yeşil: 3",
-                      "Mavi: 1",
-                      "Kırmızı: 2",
+                      "Yeşil: ${periyodik["Yeşil"] ?? 0}",
+                      "Mavi: ${periyodik["Mavi"] ?? 0}",
+                      "Sarı: ${periyodik["Sarı"] ?? 0}",
+                      "Kırmızı: ${periyodik["Kırmızı"] ?? 0}",
                     ],
                   ),
                 ),
               ],
             ),
 
-            SizedBox(height: 16),
+            const SizedBox(height: 20),
 
+            /// 📄 RAPOR / ⚙️ AYAR
             Row(
-              children: [
+              children: const [
                 Expanded(
                   child: DashboardCard(
                     title: "Raporlar",
-                    icon: Icons.assignment,
+                    icon: Icons.assignment_outlined,
                     isPrimary: false,
                   ),
                 ),
@@ -121,12 +174,14 @@ class _HomeScreenState extends State<HomeScreen> {
                 Expanded(
                   child: DashboardCard(
                     title: "Ayarlar",
-                    icon: Icons.settings,
+                    icon: Icons.settings_outlined,
                     isPrimary: false,
                   ),
                 ),
               ],
             ),
+
+            const SizedBox(height: 32),
           ],
         ),
       ),

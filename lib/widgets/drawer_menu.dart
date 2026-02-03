@@ -127,7 +127,7 @@ class DrawerMenu extends StatelessWidget {
       padding: const EdgeInsets.all(16),
       child: ElevatedButton.icon(
         style: ElevatedButton.styleFrom(
-          backgroundColor: Colors.white.withOpacity(0.2),
+          backgroundColor: Colors.white.withValues(alpha: 0.2),
           foregroundColor: Colors.white,
           minimumSize: const Size(double.infinity, 48),
         ),

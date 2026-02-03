@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import '../core/api/auth_service.dart';
 import '../core/api/api_client.dart';
+import '../core/notification/fcm_service.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
@@ -33,13 +34,17 @@ class _LoginScreenState extends State<LoginScreen> {
     // 🔒 Lisans kontrol (auth.php zaten yapıyor)
     final licenseRes = await ApiClient.get("license_status.php");
 
-    if (!mounted) return;
+if (!mounted) return;
 
-    if (licenseRes.statusCode == 403) {
-      Navigator.pushReplacementNamed(context, "/license");
-    } else {
-      Navigator.pushReplacementNamed(context, "/home");
-    }
+if (licenseRes.statusCode == 403) {
+  Navigator.pushReplacementNamed(context, "/license");
+} else {
+  await FCMService.init();
+  if (!mounted) return;
+  Navigator.pushReplacementNamed(context, "/home");
+}
+
+
   }
 
   void _error(String msg) {
@@ -187,9 +192,14 @@ class _LoginScreenState extends State<LoginScreen> {
                       child: const Text("Şifremi Unuttum"),
                     ),
 
+                  //  TextButton(
+                  //    onPressed: () {},
+                   //   child: const Text("Lisans Al"),
+                  //  ),
+
                     TextButton(
                       onPressed: () {},
-                      child: const Text("Lisans Al"),
+                      child: const Text("Bize Ulaşın"),
                     ),
                   ],
                 ),

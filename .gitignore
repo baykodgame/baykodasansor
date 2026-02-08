@@ -37,6 +37,10 @@ ios/.symlinks/
 ios/Flutter/Flutter.framework
 ios/Flutter/Flutter.podspec
 
+.env
+.env.*
+
+
 
 # Symbolication related
 app.*.symbols
